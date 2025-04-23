@@ -115,4 +115,27 @@ public class GradeDao {
         return grades;
     }
     
+    public List<Grade> getGradesByStudentId(long id){
+        String sql = "SELECT * FROM grades WHERE student_id = ?";
+        List<Grade> grades = new ArrayList<>();
+        try (
+            Connection con = DBUtil.getConnection();
+            PreparedStatement stmt = con.prepareStatement(sql)
+        ) {
+            stmt.setLong(1, id);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Grade grade = new Grade(
+                    rs.getLong("student_id"),
+                    rs.getLong("lesson_id"),
+                    rs.getInt("grade_value")
+                );
+                grade.setId(rs.getLong("id"));
+                grades.add(grade);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return grades;
+    }
 }

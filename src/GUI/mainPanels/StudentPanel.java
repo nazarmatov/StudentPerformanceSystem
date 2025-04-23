@@ -1,6 +1,7 @@
 package GUI.mainPanels;
 
 import DAO.StudentDao;
+import GUI.journal.StudentJournal;
 import models.Student;
 
 import javax.swing.*;
@@ -20,17 +21,18 @@ public class StudentPanel extends JPanel {
         studentDao = new StudentDao();
         setLayout(new BorderLayout());
 
-        // Верхняя панель: поиск + кнопка меню
         JPanel topPanel = new JPanel(new BorderLayout());
+        JPanel bottomPanel = new JPanel(new BorderLayout());
 
         searchField = new JTextField();
         topPanel.add(searchField, BorderLayout.CENTER);
 
         JButton menuButton = new JButton("⋮");
         JPopupMenu popupMenu = new JPopupMenu();
-        JMenuItem addItem = new JMenuItem("Добавить");
-        JMenuItem updateItem = new JMenuItem("Обновить");
-        JMenuItem deleteItem = new JMenuItem("Удалить");
+        JMenuItem addItem = new JMenuItem("add student");
+        JMenuItem updateItem = new JMenuItem("update student");
+        JMenuItem deleteItem = new JMenuItem("delete student");
+        JButton studentGradesListButton = new JButton("see grades list of student");
 
         popupMenu.add(addItem);
         popupMenu.add(updateItem);
@@ -38,28 +40,28 @@ public class StudentPanel extends JPanel {
 
         menuButton.addActionListener(e -> popupMenu.show(menuButton, 0, menuButton.getHeight()));
         topPanel.add(menuButton, BorderLayout.EAST);
+        bottomPanel.add(studentGradesListButton, BorderLayout.CENTER);
 
         add(topPanel, BorderLayout.NORTH);
+        add(bottomPanel, BorderLayout.SOUTH);
 
-        // Таблица
-        tableModel = new DefaultTableModel(new String[]{"ID", "Имя", "Группа"}, 0);
+        tableModel = new DefaultTableModel(new String[]{"ID", "Name", "Group"}, 0);
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
         loadStudents();
 
-        // Поиск по тексту
         searchField.addKeyListener(new KeyAdapter() {
             public void keyReleased(KeyEvent e) {
                 filterStudents(searchField.getText());
             }
         });
 
-        // Действия меню
         addItem.addActionListener(e -> showAddDialog());
         updateItem.addActionListener(e -> showUpdateDialog());
         deleteItem.addActionListener(e -> deleteSelectedStudent());
+        studentGradesListButton.addActionListener(e -> showGradesListDialog());
     }
 
     private void loadStudents() {
@@ -86,10 +88,10 @@ public class StudentPanel extends JPanel {
         JTextField nameField = new JTextField();
         JTextField groupField = new JTextField();
         Object[] inputs = {
-            "Имя:", nameField,
-            "Группа:", groupField
+            "name:", nameField,
+            "group:", groupField
         };
-        int option = JOptionPane.showConfirmDialog(this, inputs, "Добавить студента", JOptionPane.OK_CANCEL_OPTION);
+        int option = JOptionPane.showConfirmDialog(this, inputs, "Add student", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
             Student s = new Student(nameField.getText(), groupField.getText());
             studentDao.addStudent(s);
@@ -100,7 +102,7 @@ public class StudentPanel extends JPanel {
     private void showUpdateDialog() {
         int row = table.getSelectedRow();
         if (row == -1) {
-            JOptionPane.showMessageDialog(this, "Выберите студента!");
+            JOptionPane.showMessageDialog(this, "Choose student!");
             return;
         }
 
@@ -112,11 +114,11 @@ public class StudentPanel extends JPanel {
         JTextField groupField = new JTextField(currentGroup);
 
         Object[] inputs = {
-            "Имя:", nameField,
-            "Группа:", groupField
+            "name:", nameField,
+            "group:", groupField
         };
 
-        int option = JOptionPane.showConfirmDialog(this, inputs, "Обновить студента", JOptionPane.OK_CANCEL_OPTION);
+        int option = JOptionPane.showConfirmDialog(this, inputs, "Update student", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
             Student s = new Student(nameField.getText(), groupField.getText());
             s.setId(id);
@@ -128,16 +130,28 @@ public class StudentPanel extends JPanel {
     private void deleteSelectedStudent() {
         int row = table.getSelectedRow();
         if (row == -1) {
-            JOptionPane.showMessageDialog(this, "Выберите студента!");
+            JOptionPane.showMessageDialog(this, "Choose student!");
             return;
         }
 
         long id = (long) table.getValueAt(row, 0);
-        int confirm = JOptionPane.showConfirmDialog(this, "Удалить этого студента?", "Подтверждение", JOptionPane.YES_NO_OPTION);
+        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure about deleting?", "Confirmation", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             studentDao.deleteStudent((int) id);
             loadStudents();
         }
+    }
+
+    private void showGradesListDialog(){
+        int row = table.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(null, "choose student!");
+            return;
+        }
+
+        long studentId =(long) tableModel.getValueAt(row, 0);
+        Student student = studentDao.getStudentByID((int)studentId);
+        new StudentJournal(student).setVisible(true);
     }
 }
 

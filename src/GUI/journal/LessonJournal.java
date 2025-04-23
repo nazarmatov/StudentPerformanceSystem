@@ -16,13 +16,13 @@ public class LessonJournal extends JDialog {
     private StudentDao studentDao = new StudentDao();
 
     public LessonJournal(Lesson lesson) {
-        setTitle("Журнал: " + lesson.getTitle());
+        setTitle("Journal: " + lesson.getTitle());
         setSize(500, 400);
         setLocationRelativeTo(null);
         setModal(true);
 
         JTable table = new JTable();
-        DefaultTableModel model = new DefaultTableModel(new String[]{"Студент", "Оценка"}, 0);
+        DefaultTableModel model = new DefaultTableModel(new String[]{"Student", "Grade"}, 0);
         table.setModel(model);
 
         List<Grade> grades = gradeDao.getGradesByLessonId(lesson.getId());

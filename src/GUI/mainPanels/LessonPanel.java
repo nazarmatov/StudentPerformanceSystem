@@ -20,14 +20,14 @@ public class LessonPanel extends JPanel {
         this.lessonDao = new LessonDao();
         setLayout(new BorderLayout());
 
-        tableModel = new DefaultTableModel(new String[]{"ID", "Название"}, 0);
+        tableModel = new DefaultTableModel(new String[]{"ID", "Title"}, 0);
         lessonTable = new JTable(tableModel);
         add(new JScrollPane(lessonTable), BorderLayout.CENTER);
 
         JPanel bottomPanel = new JPanel();
-        JButton addButton = new JButton("Добавить урок");
-        JButton deleteButton = new JButton("Удалить урок");
-        JButton journalButton = new JButton("Показать журнал");
+        JButton addButton = new JButton("add lesson");
+        JButton deleteButton = new JButton("delete lesson");
+        JButton journalButton = new JButton("show jornal");
 
         bottomPanel.add(journalButton);
         bottomPanel.add(addButton);
@@ -40,8 +40,8 @@ public class LessonPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JTextField titleField = new JTextField();
-                Object[] inputs = {"Название:", titleField};
-                int option = JOptionPane.showConfirmDialog(null, inputs, "Добавить урок", JOptionPane.OK_CANCEL_OPTION);
+                Object[] inputs = {"title:", titleField};
+                int option = JOptionPane.showConfirmDialog(null, inputs, "Add lesson", JOptionPane.OK_CANCEL_OPTION);
                 if (option == JOptionPane.OK_OPTION) {
                     Lesson lesson = new Lesson();
                     lesson.setTitle(titleField.getText());
@@ -56,11 +56,11 @@ public class LessonPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 int row = lessonTable.getSelectedRow();
                 if (row == -1) {
-                    JOptionPane.showMessageDialog(null, "Выберите урок для удаления.");
+                    JOptionPane.showMessageDialog(null, "Choose lesson");
                     return;
                 }
                 long id = (long) lessonTable.getValueAt(row, 0);
-                int confirm = JOptionPane.showConfirmDialog(null, "Удалить этот урок?", "Подтверждение", JOptionPane.YES_NO_OPTION);
+                int confirm = JOptionPane.showConfirmDialog(null, "Are you sure?", "Confirmation", JOptionPane.YES_NO_OPTION);
                 if (confirm == JOptionPane.YES_OPTION) {
                     lessonDao.deleteLesson((int) id);
                     loadLessons();
@@ -73,7 +73,7 @@ public class LessonPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = lessonTable.getSelectedRow();
                 if (selectedRow == -1) {
-                    JOptionPane.showMessageDialog(null, "Выберите урок.");
+                    JOptionPane.showMessageDialog(null, "Choose lesson");
                     return;
                 }
                 long lessonId = (long) tableModel.getValueAt(selectedRow, 0);

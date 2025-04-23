@@ -24,13 +24,13 @@ public class GradePanel extends JPanel {
 
         setLayout(new BorderLayout());
 
-        tableModel = new DefaultTableModel(new String[]{"ID", "Студент", "Урок", "Оценка"}, 0);
+        tableModel = new DefaultTableModel(new String[]{"ID", "Student", "Lesson", "Grade"}, 0);
         gradeTable = new JTable(tableModel);
         add(new JScrollPane(gradeTable), BorderLayout.CENTER);
 
         JPanel bottomPanel = new JPanel();
-        JButton addButton = new JButton("Добавить оценку");
-        JButton deleteButton = new JButton("Удалить оценку");
+        JButton addButton = new JButton("put grade");
+        JButton deleteButton = new JButton("delete grade");
 
         bottomPanel.add(addButton);
         bottomPanel.add(deleteButton);
@@ -49,12 +49,12 @@ public class GradePanel extends JPanel {
                 JTextField scoreField = new JTextField();
 
                 Object[] inputs = {
-                    "Студент:", studentBox,
-                    "Урок:", lessonBox,
-                    "Оценка:", scoreField
+                    "Student:", studentBox,
+                    "Lesson:", lessonBox,
+                    "Grade", scoreField
                 };
 
-                int option = JOptionPane.showConfirmDialog(null, inputs, "Добавить оценку", JOptionPane.OK_CANCEL_OPTION);
+                int option = JOptionPane.showConfirmDialog(null, inputs, "Add grade", JOptionPane.OK_CANCEL_OPTION);
                 if (option == JOptionPane.OK_OPTION) {
                     Grade grade = new Grade();
                     grade.setStudentId(((Student) studentBox.getSelectedItem()).getId());
@@ -71,11 +71,11 @@ public class GradePanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 int row = gradeTable.getSelectedRow();
                 if (row == -1) {
-                    JOptionPane.showMessageDialog(null, "Выберите оценку для удаления.");
+                    JOptionPane.showMessageDialog(null, "Choose grade");
                     return;
                 }
                 long id = (long) gradeTable.getValueAt(row, 0);
-                int confirm = JOptionPane.showConfirmDialog(null, "Удалить эту оценку?", "Подтверждение", JOptionPane.YES_NO_OPTION);
+                int confirm = JOptionPane.showConfirmDialog(null, "Are you sure about this?", "Confirmation", JOptionPane.YES_NO_OPTION);
                 if (confirm == JOptionPane.YES_OPTION) {
                     gradeDao.deleteGrade((int) id);
                     loadGrades();
