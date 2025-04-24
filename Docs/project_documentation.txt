@@ -1,0 +1,116 @@
+Project Documentation: "Student Performance Management System"
+
+1 MainApp
+`MainApp` is the main application frame containing tabs: "Students", "Lessons", and "Grades"
+
+Methods:
+- MainApp(): constructor, initializes `JTabbedPane` and adds `StudentPanel`, `LessonPanel`, and `GradePanel` tabs.
+
+2 StudentPanel
+`StudentPanel` manages the display and operations related to students.
+
+Components:
+- `JTable studentTable`: displays the list of students.
+- `DefaultTableModel tableModel`: the table's data model.
+- `StudentDao studentDao`: DAO object for student operations.
+
+Methods:
+- loadStudents(): loads all students from the database and populates the table.
+- addButtonListener: adds a new student through an input form.
+- deleteButtonListener: deletes the selected student.
+- updateButtonListener: allows updating the name of the selected student.
+- journalButtonListener: opens the student journal for the selected student via `StudentJournal` dialog.
+
+3 LessonPanel
+`LessonPanel` manages the display and actions related to lessons.
+
+Components:
+- `JTable lessonTable`, `DefaultTableModel tableModel`, `LessonDao lessonDao`
+
+Methods:
+- loadLessons(): loads all lessons.
+- addButtonListener: adds a new lesson.
+- deleteButtonListener: deletes the selected lesson.
+- journalButtonListener: opens the journal for the selected lesson using `LessonJournalDialog`.
+
+4 GradePanel
+`GradePanel` allows managing students' grades for lessons.
+
+Components:
+- `JTable gradeTable`, `DefaultTableModel tableModel`
+- `GradeDao gradeDao`, `StudentDao studentDao`, `LessonDao lessonDao`
+
+Methods:
+- loadGrades(): loads all grades.
+- addButtonListener: opens a dialog to add a new grade (select student, lesson, and value).
+- deleteButtonListener: deletes the selected grade.
+
+5 LessonJournalDialog
+Dialog window showing the journal for a selected lesson: list of students with their grades for that lesson.
+
+Components:
+- `JTable journalTable`: table of students and grades.
+- `GradeDao`, `StudentDao`: used to load grades and student names.
+
+6 StudentJournal
+Dialog window showing all grades of a selected student across lessons.
+
+Components:
+- `JTable table`: shows lesson titles and corresponding grades.
+- `LessonDao`, `GradeDao`: used to retrieve data for display.
+
+7 GradeDao
+`GradeDao` manages access to grade data.
+
+Methods:
+- addGrade(Grade grade): adds a new grade.
+- getAllGrades(): returns a list of all grades.
+- getGradeById(long id): returns a specific grade.
+- deleteGrade(long id): deletes a grade.
+- getGradesByLessonId(int lessonId): returns grades for a specific lesson.
+- getGradeByStudentAndLesson(int studentId, int lessonId): returns a specific grade for a student in a lesson.
+- getGradesByStudentId(long studentId): returns all grades for a specific student.
+
+8 StudentDao
+Allows CRUD operations on the student table.
+
+Methods:
+- getAllStudents(): returns all students.
+- addStudent(Student student): adds a student.
+- deleteStudent(int id): deletes a student by ID.
+- updateStudent(Student student): updates student information.
+- getStudentByID(int id): returns a student by ID.
+
+9 LessonDao
+Allows CRUD operations on the lesson table.
+
+Methods:
+- getAllLessons(): returns all lessons.
+- addLesson(Lesson lesson): adds a lesson.
+- deleteLesson(int id): deletes a lesson by ID.
+- getLessonById(int id): returns a lesson by ID.
+
+10 Grade (model)
+Contains fields:
+- `id`, `studentId`, `lessonId`, `value`
+
+11 Student (model)
+Contains fields:
+- `id`, `name`
+
+12 Lesson (model)
+Contains fields:
+- `id`, `title`
+
+Java Swing Components Used
+- JFrame: main application window.
+- JTabbedPane: tabs for navigation (Students, Lessons, Grades).
+- JPanel: container for interface elements.
+- JTable and DefaultTableModel: display data in table format.
+- JScrollPane: provides scrolling for tables.
+- JButton: action buttons.
+- JOptionPane: dialog windows for input and confirmation.
+- JComboBox: dropdown selection lists.
+- JTextField: text input fields.
+- JDialog: modal windows for additional details (journals).
+
